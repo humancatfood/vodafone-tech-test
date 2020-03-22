@@ -3,8 +3,10 @@
  * Gets the processing page
  * @param {array} data
  */
-function getProcessingPage(data) {
-
+function getProcessingPage(data = []) {
+  return new Promise((resolve, reject) => {
+    resolve();
+  });
 }
 
 
