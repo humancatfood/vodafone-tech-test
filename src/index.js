@@ -1,5 +1,26 @@
 /* eslint-disable padded-blocks, arrow-body-style, arrow-parens */
 
+const STATES = {
+  SUCCESS: 'success',
+  PROCESSING: 'processing',
+  ERROR: 'error',
+}
+
+const ERRORS = {
+  NO_STOCK: 'NO_STOCK',
+  INCORRECT_DETAILS: 'INCORRECT_DETAILS',
+}
+
+const PAGE_TITLES = {
+  SUCCESS: 'Order complete',
+  ERROR: 'Error page',
+}
+
+const ERROR_MESSAGES = {
+  [ERRORS.NO_STOCK]: 'No stock has been found',
+  [ERRORS.INCORRECT_DETAILS]: 'Incorrect details have been entered',
+}
+
 /**
  * Gets the processing page
  * @param {array} data
@@ -13,26 +34,23 @@ function getProcessingPage(data) {
       let handleNextItem; // force hoisting so 'process' can access it
 
       const succeed = () => resolve({
-        title: 'Order complete',
+        title: PAGE_TITLES.SUCCESS,
         message: null,
       });
 
       const process = (delay = 2000) => setTimeout(handleNextItem, delay);
 
       const errorOut = message => resolve({
-        title: 'Error page',
+        title: PAGE_TITLES.ERROR,
         message,
       });
 
       const error = (errorCode) => {
         switch (errorCode) {
 
-          case 'NO_STOCK':
-            errorOut('No stock has been found');
-            break;
-
-          case 'INCORRECT_DETAILS':
-            errorOut('Incorrect details have been entered');
+          case ERRORS.NO_STOCK:
+            case ERRORS.INCORRECT_DETAILS:
+            errorOut(ERROR_MESSAGES[errorCode]);
             break;
 
           case null:
@@ -52,15 +70,15 @@ function getProcessingPage(data) {
         if (item) {
           switch (item.state) {
 
-            case 'success':
+            case STATES.SUCCESS:
               succeed();
               break;
 
-            case 'processing':
+            case STATES.PROCESSING:
               process();
               break;
 
-            case 'error':
+            case STATES.ERROR:
               error(item.errorCode);
               break;
 
@@ -87,4 +105,8 @@ function getProcessingPage(data) {
 
 module.exports = {
   getProcessingPage,
+  STATES,
+  ERRORS,
+  PAGE_TITLES,
+  ERROR_MESSAGES,
 };

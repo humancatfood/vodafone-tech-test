@@ -1,5 +1,5 @@
 /* eslint-disable padded-blocks, arrow-body-style, arrow-parens */
-const { getProcessingPage } = require('../src/index.js');
+const { getProcessingPage, STATES, ERRORS, PAGE_TITLES, ERROR_MESSAGES } = require('../src/index.js');
 
 
 describe('simple', () => {
@@ -7,10 +7,10 @@ describe('simple', () => {
   it('should succeed', () => {
 
     return getProcessingPage([{
-      state: 'success',
+      state: STATES.SUCCESS,
     }])
       .then(result => expect(result).toEqual({
-        title: 'Order complete',
+        title: PAGE_TITLES.SUCCESS,
         message: null,
       }));
 
@@ -21,29 +21,29 @@ describe('simple', () => {
     return Promise.all([
 
       getProcessingPage([{
-        state: 'success',
-        errorCode: 'NO_STOCK',
+        state: STATES.SUCCESS,
+        errorCode: ERRORS.NO_STOCK,
       }])
         .then(result => expect(result).toEqual({
-          title: 'Order complete',
+          title: PAGE_TITLES.SUCCESS,
           message: null,
         })),
 
       getProcessingPage([{
-        state: 'success',
+        state: STATES.SUCCESS,
         errorCode: null,
       }])
         .then(result => expect(result).toEqual({
-          title: 'Order complete',
+          title: PAGE_TITLES.SUCCESS,
           message: null,
         })),
 
       getProcessingPage([{
-        state: 'success',
+        state: STATES.SUCCESS,
         errorCode: 'some other string',
       }])
         .then(result => expect(result).toEqual({
-          title: 'Order complete',
+          title: PAGE_TITLES.SUCCESS,
           message: null,
         })),
 
@@ -58,7 +58,7 @@ describe('simple', () => {
     const start = Date.now();
 
     return getProcessingPage([{
-      state: 'success',
+      state: STATES.SUCCESS,
     }])
       .then(() => expect(Date.now() - start).toBeLessThan(10));
 
@@ -72,18 +72,18 @@ describe('simple', () => {
     return Promise.all([
 
       getProcessingPage([{
-        state: 'processing',
+        state: STATES.PROCESSING,
       }, {
-        state: 'success',
+        state: STATES.SUCCESS,
       }])
         .then(() => expect(Date.now() - (start + 2000)).toBeLessThan(10)),
 
       getProcessingPage([{
-        state: 'processing',
+        state: STATES.PROCESSING,
       }, {
-        state: 'processing',
+        state: STATES.PROCESSING,
       }, {
-        state: 'success',
+        state: STATES.SUCCESS,
       }])
         .then(() => expect(Date.now() - (start + 4000)).toBeLessThan(10)),
 
@@ -97,38 +97,38 @@ describe('simple', () => {
     return Promise.all([
 
       getProcessingPage([{
-        state: 'error',
-        errorCode: 'NO_STOCK',
+        state: STATES.ERROR,
+        errorCode: ERRORS.NO_STOCK,
       }])
         .then(result => expect(result).toEqual({
-          title: 'Error page',
-          message: 'No stock has been found',
+          title: PAGE_TITLES.ERROR,
+          message: ERROR_MESSAGES[ERRORS.NO_STOCK],
         })),
 
       getProcessingPage([{
-        state: 'error',
-        errorCode: 'INCORRECT_DETAILS',
+        state: STATES.ERROR,
+        errorCode: ERRORS.INCORRECT_DETAILS,
       }])
         .then(result => expect(result).toEqual({
-          title: 'Error page',
-          message: 'Incorrect details have been entered',
+          title: PAGE_TITLES.ERROR,
+          message: ERROR_MESSAGES[ERRORS.INCORRECT_DETAILS],
         })),
 
       getProcessingPage([{
-        state: 'error',
+        state: STATES.ERROR,
         errorCode: undefined,
       }])
         .then(result => expect(result).toEqual({
-          title: 'Error page',
+          title: PAGE_TITLES.ERROR,
           message: null,
         })),
 
       getProcessingPage([{
-        state: 'error',
+        state: STATES.ERROR,
         errorCode: null,
       }])
         .then(result => expect(result).toEqual({
-          title: 'Error page',
+          title: PAGE_TITLES.ERROR,
           message: null,
         })),
 
@@ -152,12 +152,12 @@ describe('simple', () => {
         .catch(e => expect(e.message).toMatch(/unexpected state: '5'/)),
 
       getProcessingPage([{
-        state: 'processing',
+        state: STATES.PROCESSING,
       }, {
-        state: 'processing',
+        state: STATES.PROCESSING,
       }, {
         state: () => { return 'a function is not a valid "state"'; },
-        errorCode: 'NO_STOCK',
+        errorCode: ERRORS.NO_STOCK,
       }])
         .catch(e => expect(e.message).toMatch(/unexpected state: 'function/)),
     ]);
@@ -170,23 +170,23 @@ describe('simple', () => {
     return Promise.all([
 
       getProcessingPage([{
-        state: 'error',
+        state: STATES.ERROR,
         errorCode: 'ABSOLUTELY_NO_STOCK',
       }])
         .catch(e => expect(e.message).toMatch(/unexpected errorCode: 'ABSOLUTELY_NO_STOCK'/)),
 
       getProcessingPage([{
-        state: 'error',
+        state: STATES.ERROR,
         errorCode: 5,
       }])
         .catch(e => expect(e.message).toMatch(/unexpected errorCode: '5'/)),
 
       getProcessingPage([{
-        state: 'processing',
+        state: STATES.PROCESSING,
       }, {
-        state: 'processing',
+        state: STATES.PROCESSING,
       }, {
-        state: 'error',
+        state: STATES.ERROR,
         errorCode: () => { return 'a function is not a valid errorCode either'; },
       }])
         .catch(e => expect(e.message).toMatch(/unexpected errorCode: 'function/)),
@@ -212,7 +212,7 @@ describe('simple', () => {
       ])).rejects.toThrow(),
 
       expect(getProcessingPage([
-        { state: 'processing' },
+        { state: STATES.PROCESSING },
         undefined,
       ])).rejects.toThrow(),
 
@@ -222,9 +222,9 @@ describe('simple', () => {
 
 
       expect(getProcessingPage([
-        { state: 'processing' },
+        { state: STATES.PROCESSING },
         'hello world',
-        { state: 'success' },
+        { state: STATES.SUCCESS },
       ])).rejects.toThrow(),
 
       expect(getProcessingPage([5])).rejects.toThrow(),
