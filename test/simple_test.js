@@ -60,7 +60,7 @@ describe('simple', () => {
     return getProcessingPage([{
       state: 'success',
     }])
-      .then(() => expect(Date.now() - start).toBeCloseTo(0));
+      .then(() => expect(Date.now() - start).toBeLessThan(10));
 
   });
 
@@ -76,7 +76,7 @@ describe('simple', () => {
       }, {
         state: 'success',
       }])
-        .then(() => expect(Date.now() - start).toBeCloseTo(2000)),
+        .then(() => expect(Date.now() - (start + 2000)).toBeLessThan(10)),
 
       getProcessingPage([{
         state: 'processing',
@@ -85,7 +85,7 @@ describe('simple', () => {
       }, {
         state: 'success',
       }])
-        .then(() => expect(Date.now() - start).toBeCloseTo(4000)),
+        .then(() => expect(Date.now() - (start + 4000)).toBeLessThan(10)),
 
     ]);
 
