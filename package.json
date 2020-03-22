@@ -1,0 +1,25 @@
+{
+  "name": "tech-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "build/index.js",
+  "scripts": {
+    "test": "jest",
+    "build": "webpack --mode production",
+    "lint": "eslint --cache --format codeframe --ext mjs,js src test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "module": "src/index.js",
+  "devDependencies": {
+    "@neutrinojs/airbnb-base": "^9.1.0",
+    "@neutrinojs/jest": "^9.1.0",
+    "@neutrinojs/library": "^9.1.0",
+    "eslint": "^6.8.0",
+    "jest": "^25.1.0",
+    "neutrino": "^9.1.0",
+    "webpack": "^4.42.0",
+    "webpack-cli": "^3.3.11"
+  }
+}
