@@ -21,6 +21,9 @@ const ERROR_MESSAGES = {
   [ERRORS.INCORRECT_DETAILS]: 'Incorrect details have been entered',
 }
 
+
+const INTERVAL = process.env.NODE_ENV === 'test' ? 100 : 2000;
+
 /**
  * Gets the processing page
  * @param {array} data
@@ -38,7 +41,7 @@ function getProcessingPage(data) {
         message: null,
       });
 
-      const process = (delay = 2000) => setTimeout(handleNextItem, delay);
+      const process = (delay=INTERVAL) => setTimeout(handleNextItem, delay);
 
       const errorOut = message => resolve({
         title: PAGE_TITLES.ERROR,
@@ -109,4 +112,5 @@ module.exports = {
   ERRORS,
   PAGE_TITLES,
   ERROR_MESSAGES,
+  INTERVAL,
 };

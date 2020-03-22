@@ -1,7 +1,9 @@
 /* eslint-disable padded-blocks, arrow-body-style, arrow-parens */
-const { getProcessingPage, STATES, ERRORS, PAGE_TITLES, ERROR_MESSAGES } = require('../src/index.js');
+const { getProcessingPage, STATES, ERRORS, PAGE_TITLES, ERROR_MESSAGES, INTERVAL } = require('../src/index.js');
 
-const TIMING_MARGIN = 10;
+const TIMING_MARGIN = INTERVAL * 0.1;
+
+
 
 describe('simple', () => {
 
@@ -77,7 +79,7 @@ describe('simple', () => {
       }, {
         state: STATES.SUCCESS,
       }])
-        .then(() => expect(Date.now() - (start + 2000)).toBeLessThan(TIMING_MARGIN)),
+        .then(() => expect(Date.now() - (start + INTERVAL)).toBeLessThan(TIMING_MARGIN)),
 
       getProcessingPage([{
         state: STATES.PROCESSING,
@@ -86,7 +88,7 @@ describe('simple', () => {
       }, {
         state: STATES.SUCCESS,
       }])
-        .then(() => expect(Date.now() - (start + 4000)).toBeLessThan(TIMING_MARGIN)),
+        .then(() => expect(Date.now() - (start + INTERVAL * 2)).toBeLessThan(TIMING_MARGIN)),
 
     ]);
 
