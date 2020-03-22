@@ -136,4 +136,100 @@ describe('simple', () => {
 
   });
 
+  it('should fail for unrecognised states', () => {
+
+    expect.assertions(3);
+    return Promise.all([
+
+      getProcessingPage([{
+        state: 'Shneebly-deebly-doobly!',
+      }])
+        .catch(e => expect(e.message).toMatch(/unexpected state: 'Shneebly-deebly-doobly!'/)),
+
+      getProcessingPage([{
+        state: 5,
+      }])
+        .catch(e => expect(e.message).toMatch(/unexpected state: '5'/)),
+
+      getProcessingPage([{
+        state: 'processing',
+      }, {
+        state: 'processing',
+      }, {
+        state: () => { return 'a function is not a valid "state"'; },
+        errorCode: 'NO_STOCK',
+      }])
+        .catch(e => expect(e.message).toMatch(/unexpected state: 'function/)),
+    ]);
+
+  });
+
+  it('should fail for unrecognised errorCodes', () => {
+
+    expect.assertions(3);
+    return Promise.all([
+
+      getProcessingPage([{
+        state: 'error',
+        errorCode: 'ABSOLUTELY_NO_STOCK',
+      }])
+        .catch(e => expect(e.message).toMatch(/unexpected errorCode: 'ABSOLUTELY_NO_STOCK'/)),
+
+      getProcessingPage([{
+        state: 'error',
+        errorCode: 5,
+      }])
+        .catch(e => expect(e.message).toMatch(/unexpected errorCode: '5'/)),
+
+      getProcessingPage([{
+        state: 'processing',
+      }, {
+        state: 'processing',
+      }, {
+        state: 'error',
+        errorCode: () => { return 'a function is not a valid errorCode either'; },
+      }])
+        .catch(e => expect(e.message).toMatch(/unexpected errorCode: 'function/)),
+
+    ]);
+
+  });
+
+  it('should fail *somehow* on bad input', () => {
+
+    expect.assertions(8);
+
+    return Promise.all([
+
+      expect(getProcessingPage([])).rejects.toThrow(),
+
+      expect(getProcessingPage(null)).rejects.toThrow(),
+
+      expect(getProcessingPage(undefined)).rejects.toThrow(),
+
+      expect(getProcessingPage([
+        'hello world',
+      ])).rejects.toThrow(),
+
+      expect(getProcessingPage([
+        { state: 'processing' },
+        undefined,
+      ])).rejects.toThrow(),
+
+      expect(getProcessingPage([
+        { noStateHere: true },
+      ])).rejects.toThrow(),
+
+
+      expect(getProcessingPage([
+        { state: 'processing' },
+        'hello world',
+        { state: 'success' },
+      ])).rejects.toThrow(),
+
+      expect(getProcessingPage([5])).rejects.toThrow(),
+
+    ]);
+  });
+
 });

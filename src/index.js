@@ -4,7 +4,7 @@
  * Gets the processing page
  * @param {array} data
  */
-function getProcessingPage(data = []) {
+function getProcessingPage(data) {
 
   return new Promise((resolve, reject) => {
 
@@ -41,7 +41,7 @@ function getProcessingPage(data = []) {
             break;
 
           default:
-            reject(new Error(`unexpected errorCode: ${errorCode}`));
+            reject(new Error(`unexpected errorCode: '${errorCode}'`));
             break;
         }
       };
@@ -49,25 +49,28 @@ function getProcessingPage(data = []) {
       handleNextItem = () => {
 
         const item = data.shift();
+        if (item) {
+          switch (item.state) {
 
-        switch (item.state) {
+            case 'success':
+              succeed();
+              break;
 
-          case 'success':
-            succeed();
-            break;
+            case 'processing':
+              process();
+              break;
 
-          case 'processing':
-            process();
-            break;
+            case 'error':
+              error(item.errorCode);
+              break;
 
-          case 'error':
-            error(item.errorCode);
-            break;
+            default:
+              reject(new Error(`unexpected state: '${item.state}'`));
+              break;
 
-          default:
-            reject(new Error(`unexpected state: ${item.state}`));
-            break;
-
+          }
+        } else {
+          reject(new Error(`received malformed item: ${item}`));
         }
 
       };
