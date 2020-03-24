@@ -49,8 +49,19 @@ Handling error codes:
 
 Example usage:
 -------
+
+```javascript
 getProcessingPage([{ state: 'processing' }, { state: 'error' }])
-=> should return after 2 seconds with the object: { title: 'Error page', message: null }
+```
+
+=> should return after 2 seconds with the object:
+
+```javascript
+{
+  title: 'Error page',
+  message: null
+}
+```
 
 Notes:
 - Provide the code and a description of how to run it
