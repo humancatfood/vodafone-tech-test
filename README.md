@@ -29,10 +29,12 @@ of an array of data.
 
 Each element of the array has the following structure:
 
+```
   {
     state: <String> - a state to go to
     errorCode: <String> - optional error code
   }
+```
 
 The states have different functionalities:
 
@@ -42,10 +44,10 @@ The states have different functionalities:
 
 Handling error codes:
 
-  'NO_STOCK' = return from the helper with an object: { title: 'Error page', message: 'No stock has been found' }
-  'INCORRECT_DETAILS' = return from the helper with an object: { title: 'Error page', message: 'Incorrect details have been entered' }
-  null = return from the helper with an object: { title: 'Error page', message: null }
-  undefined = return from the helper with an object: { title: 'Error page', message: null }
+  'NO_STOCK' = return from the helper with an object: `{ title: 'Error page', message: 'No stock has been found' }`
+  'INCORRECT_DETAILS' = return from the helper with an object:` { title: 'Error page', message: 'Incorrect details have been entered' }`
+  null = return from the helper with an object: `{ title: 'Error page', message: null }`
+  undefined = return from the helper with an object: `{ title: 'Error page', message: null }`
 
 Example usage:
 -------
