@@ -38,16 +38,16 @@ Each element of the array has the following structure:
 
 The states have different functionalities:
 
-  'processing' = delay by 2 seconds, then fetch the next state
-  'error' = handle the error code provided (see below)
-  'success' = return from the helper with the object: { title: 'Order complete' message: null }
+- 'processing' = delay by 2 seconds, then fetch the next state
+- 'error' = handle the error code provided (see below)
+- 'success' = return from the helper with the object: { title: 'Order complete' message: null }
 
 Handling error codes:
 
-  'NO_STOCK' = return from the helper with an object: `{ title: 'Error page', message: 'No stock has been found' }`
-  'INCORRECT_DETAILS' = return from the helper with an object:` { title: 'Error page', message: 'Incorrect details have been entered' }`
-  null = return from the helper with an object: `{ title: 'Error page', message: null }`
-  undefined = return from the helper with an object: `{ title: 'Error page', message: null }`
+- 'NO_STOCK' = return from the helper with an object: `{ title: 'Error page', message: 'No stock has been found' }`
+- 'INCORRECT_DETAILS' = return from the helper with an object:` { title: 'Error page', message: 'Incorrect details have been entered' }`
+- null = return from the helper with an object: `{ title: 'Error page', message: null }`
+- undefined = return from the helper with an object: `{ title: 'Error page', message: null }`
 
 Example usage:
 -------
